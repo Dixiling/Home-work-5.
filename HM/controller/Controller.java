@@ -9,25 +9,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Controller {
-    DataService service = new DataService();
-    GroupLearnService groupLearnService = new GroupLearnService();
+    static DataService service = new DataService();
+    static GroupLearnService groupLearnService = new GroupLearnService();
     StudentView studentView = new StudentView();
 
-    public void createStudent (String secondName, String firstName, String lastName) {
+    public static void createStudent (String secondName, String firstName, String lastName) {
         service.create(Type.STUDENT, secondName, firstName, lastName);
     }
 
-    public void createTeacher (String secondName, String firstName, String lastName) {
+    public static void createTeacher (String secondName, String firstName, String lastName) {
         service.create(Type.TEACHER, secondName, firstName, lastName);
     }
 
-    public GroupLearn createGroupLearn (int teacherId, int... studentIds) {
+    public static GroupLearn createGroupLearn (int teacherId, int... studentIds) {
         Teacher teacher = getTeacherById(teacherId);
         List<Student> studentsList = getStudentsByIds(studentIds);
         return groupLearnService.createGroupLearn(teacher, studentsList);
     }
 
-    private Teacher getTeacherById(int teacherId) {
+    private static Teacher getTeacherById(int teacherId) {
         for (User user: service.getUsersList()) {
             if (user instanceof Teacher && ((Teacher) user).getTeacherId() == teacherId)
                 return (Teacher) user;
@@ -35,7 +35,7 @@ public class Controller {
         return null;
     }
 
-    private List<Student> getStudentsByIds (int... studentIds) {
+    private static List<Student> getStudentsByIds (int... studentIds) {
         List<Student> studentsListGroup = new ArrayList<>();
         for (int id: studentIds) {
             Student student = getStudentById(id);
@@ -46,7 +46,7 @@ public class Controller {
         return studentsListGroup;
     }
 
-    private Student getStudentById (int studentId){
+    private static Student getStudentById (int studentId){
         for (Student student: getStudentsList()) {
             if (student.getStudentId() == studentId)
                 return student;
@@ -54,7 +54,7 @@ public class Controller {
         return null;
     }
 
-    public List<Student> getStudentsList () {
+    public static List<Student> getStudentsList () {
         List<Student> studentsList = new ArrayList<>();
 
         for (User user: service.getUsersList()) {
@@ -70,7 +70,24 @@ public class Controller {
         }
     }
 
-    public void printGroupLearn (GroupLearn groupLearn) {
+    public static void printGroupLearn (GroupLearn groupLearn) {
         System.out.println(groupLearn);
     }
+    public void runCalc() {
+        Controller.createTeacher("Яков", "Иоан", "Святослав");
+        Controller.createTeacher("Каловников", "Алексей", "Викторович");
+        Controller.createStudent("Сковник", "Константин", "Антонович");
+        Controller.createStudent("Крыжовникова", "Анастасия", "Светлановна");
+        Controller.createStudent("Дурасова", "Татьяна", "Михайловна");
+        Controller.createStudent("Ельин", "Мразь", "Гадковович");
+        Controller.createStudent("Матвеев", "Сергей", "Георгиевич");
+        Controller.createStudent("Тихонов", "Максим", "Миронович");
+        Controller.createStudent("Клин", "Жуков", "Александрович");
+
+        Controller.printGroupLearn(Controller.createGroupLearn(1, 3, 5, 6, 7));
+    
+        System.out.println();
+ 
+    }
+
 }
